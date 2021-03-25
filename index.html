@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Live Chatting - Rahmat Agung Julians</title>
+    <style>
+      body {
+        background-color: #1a1a1a;
+        color: white;
+      }
+      ul#messages {
+        padding: 10px;
+      }
+      form {
+        position: fixed;
+        left: 0px;
+        bottom: 0px;
+        width: 100%;
+        background: grey;
+        padding: 20px;
+      }
+      li {
+        padding: 17px;
+        background: #37c197;
+        list-style: none;
+        border-radius: 10px;
+        margin-bottom: 10px;
+      }
+      li:nth-child(even) {
+        background: #333;
+        color: white;
+        border-radius: 10px;
+        padding: 19px;
+      }
+      #nama_user {
+        float: left;
+        width: 20%;
+        height: 30px;
+        border: none;
+      }
+      #text_message {
+        float: left;
+        width: 64%;
+        height: 30px;
+        border: none;
+        margin-left: 10px;
+      }
+      button {
+        float: left;
+        width: 9%;
+        border-radius: 10px;
+        height: 40px;
+        background-color: aqua;
+        border: 0px solid transparent;
+        margin-left: 10px;
+      }
+      button:hover {
+        background-color: rgba(0, 255, 255, 0.644);
+      }
+      input {
+        border-radius: 10px;
+        background-color: #333333;
+        color: white;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+
+    <form>
+      <input type="text" id="user_name" placeholder="nama" />
+      <input type="text" id="text_message" placeholder="masukan pesan disini ..." />
+      <button>Kirim</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+      let socket = io();
+      let username = "";
+
+      $("form").submit(function () {
+        username = $("#nama_user").val();
+        socket.emit(
+          "newMessage",
+          "@" + username + " > " + $("#text_message").val()
+        );
+        $("#text_message").val("");
+        return false;
+      });
+
+      socket.on("newMessage", function (msg) {
+        $("#messages").append($("<li>").text(msg));
+          // jika ingin menambahkan keterangan waktu, gunakan yang dibawah ini
+        // $("#messages").append($("<li>").text(msg + " || pada: " + Date()));
+      });
+    </script>
+  </body>
+</html>
